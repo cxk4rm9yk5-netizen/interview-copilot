@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Copilot</title>
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;background:#0b1020;color:#f1f5ff;
+  font-family:Arial,sans-serif
+}
+header{
+  padding:20px 7%;border-bottom:1px solid #29344a;
+  display:flex;justify-content:space-between;align-items:center
+}
+.logo{font-size:22px;font-weight:bold;color:#8eafff}
+.tag{font-size:12px;color:#9eabc4}
+main{max-width:900px;margin:45px auto;padding:20px}
+h1{font-size:38px;margin-bottom:10px}
+p{color:#b5c1d7;line-height:1.6}
+.panel{
+  margin-top:25px;background:#141e32;
+  border:1px solid #303e59;border-radius:16px;padding:22px
+}
+label{display:block;margin:17px 0 8px;color:#c9d4e8}
+input,textarea{
+  width:100%;padding:13px;border-radius:8px;
+  border:1px solid #394965;background:#0b1222;
+  color:white;font:inherit
+}
+textarea{resize:vertical;line-height:1.6}
+button{
+  border:0;border-radius:8px;padding:12px 16px;
+  margin:12px 6px 12px 0;cursor:pointer;font-weight:bold
+}
+.primary{background:#8eafff;color:#10182c}
+.secondary{background:#2b3852;color:white}
+.answer{
+  margin-top:20px;border:1px solid #405273;
+  border-radius:12px;overflow:hidden
+}
+.answerhead{
+  padding:12px;background:#202e48;
+  display:flex;justify-content:space-between;font-size:12px
+}
+.viewport{
+  height:230px;overflow:hidden;padding:18px;
+  background:#080e1b
+}
+#answer{
+  white-space:pre-wrap;line-height:1.7;
+  font-size:22px;will-change:transform
+}
+.settings{display:flex;gap:25px;flex-wrap:wrap}
+.settings div{flex:1;min-width:180px}
+input[type=range]{padding:0;accent-color:#8eafff}
+.note{font-size:12px;color:#9eabc4}
+footer{text-align:center;padding:30px;color:#7888a5}
+@media(max-width:600px){
+  h1{font-size:30px}
+  main{margin:15px auto;padding:15px}
+  header{padding:18px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">✦ Interview Copilot</div>
+  <div class="tag">EARLY PROTOTYPE</div>
+</header>
+
+<main>
+  <h1>Answer with confidence.</h1>
+  <p>Practice interview answers with a readable scrolling
+  text panel. Customize your question, answer, and text speed.</p>
+
+  <div class="panel">
+    <label for="question">Practice interview question</label>
+    <input id="question"
+      value="Tell me about yourself and your experience.">
+
+    <label for="answerInput">Suggested answer</label>
+    <textarea id="answerInput" rows="5">I am a dedicated professional who enjoys learning, solving problems, and working with others. My experience has taught me the importance of being reliable, communicating clearly, and staying organized. I am interested in this opportunity because it matches my skills and gives me a chance to contribute and continue growing.</textarea>
+
+    <button class="primary" id="start">▶ Start scrolling</button>
+    <button class="secondary" id="pause">Ⅱ Pause</button>
+    <button class="secondary" id="reset">↺ Reset</button>
+
+    <div class="settings">
+      <div>
+        <label for="font">Text size: <span id="fontLabel">22px</span></label>
+        <input id="font" type="range" min="16" max="36" value="22">
+      </div>
+      <div>
+        <label for="speed">Scroll speed: <span id="speedLabel">Slow</span></label>
+        <input id="speed" type="range" min="1" max="5" value="2">
+      </div>
+    </div>
+
+    <div class="answer">
+      <div class="answerhead">
+        <span>SUGGESTED ANSWER</span>
+        <span id="status">Ready</span>
+      </div>
+      <div class="viewport" id="viewport">
+        <div id="answer"></div>
+      </div>
+    </div>
+
+    <p class="note">
+      Demo only: this version does not capture audio or generate AI answers.
+      Use truthful answers and follow applicable interview rules.
+    </p>
+  </div>
+</main>
+
+<footer>Interview Copilot · Version 1</footer>
+
+<script>
+const input = document.getElementById("answerInput");
+const output = document.getElementById("answer");
+const font = document.getElementById("font");
+const speed = document.getElementById("speed");
+const status = document.getElementById("status");
+const viewport = document.getElementById("viewport");
+
+let position = 0;
+let running = false;
+let frame = null;
+let lastTime = 0;
+
+function updateAnswer() {
+  stop();
+  position = 0;
+  output.textContent = input.value;
+  output.style.transform = "translateY(0)";
+  status.textContent = "Ready";
+}
+
+function stop() {
+  running = false;
+  if (frame !== null) cancelAnimationFrame(frame);
+  frame = null;
+  lastTime = 0;
+}
+
+function scrollFrame(time) {
+  if (!running) return;
+
+  if (!lastTime) lastTime = time;
+  const delta = Math.min(time - lastTime, 50);
+  lastTime = time;
+
+  const max = Math.max(
+    0, output.scrollHeight - viewport.clientHeight + 25
+  );
+
+  position += delta * Number(speed.value) * 0.012;
+  if (position >= max) {
+    position = max;
+    output.style.transform = `translateY(-${position}px)`;
+    stop();
+    status.textContent = "Finished";
+    return;
+  }
+
+  output.style.transform = `translateY(-${position}px)`;
+  frame = requestAnimationFrame(scrollFrame);
+}
+
+document.getElementById("start").onclick = () => {
+  if (running) return;
+
+  const max = Math.max(
+    0, output.scrollHeight - viewport.clientHeight + 25
+  );
+
+  if (position >= max) {
+    position = 0;
+    output.style.transform = "translateY(0)";
+  }
+
+  running = true;
+  status.textContent = "Scrolling";
+  frame = requestAnimationFrame(scrollFrame);
+};
+
+document.getElementById("pause").onclick = () => {
+  stop();
+  status.textContent = "Paused";
+};
+
+document.getElementById("reset").onclick = () => {
+  stop();
+  position = 0;
+  output.style.transform = "translateY(0)";
+  status.textContent = "Reset";
+};
+
+input.addEventListener("input", updateAnswer);
+
+font.addEventListener("input", () => {
+  output.style.fontSize = font.value + "px";
+  document.getElementById("fontLabel").textContent =
+    font.value + "px";
+});
+
+speed.addEventListener("input", () => {
+  const labels = ["Very slow", "Slow", "Medium", "Fast", "Very fast"];
+  document.getElementById("speedLabel").textContent =
+    labels[Number(speed.value) - 1];
+});
+
+updateAnswer();
+</script>
+</body>
+</html>
