@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview Copilot</title>
+  <link rel="stylesheet" href="panel.css">
+</head>
+<body>
+  <main class="container">
+    <p class="mode">PRACTICE MODE</p>
+    <h1>Interview Copilot</h1>
+    <p class="subtitle">Your reading panel</p>
+
+    <label for="question">Interview question</label>
+    <textarea id="question" placeholder="Type or paste an interview question here..."></textarea>
+
+    <button id="getAnswer">Get answer</button>
+
+    <section class="answer-section">
+      <h2>Suggested answer</h2>
+      <div id="answer">Your suggested answer will appear here.</div>
+    </section>
+
+    <div class="controls">
+      <button id="startScroll">Start scrolling</button>
+      <button id="pauseScroll">Pause</button>
+      <button id="resetScroll">Reset</button>
+    </div>
+
+    <label for="speed">Scroll speed</label>
+    <input id="speed" type="range" min="1" max="10" value="3">
+
+    <label for="textSize">Text size</label>
+    <input id="textSize" type="range" min="14" max="30" value="18">
+
+    <p id="status">Backend connection not tested yet.</p>
+  </main>
+
+  <script src="panel.js"></script>
+</body>
+</html>
