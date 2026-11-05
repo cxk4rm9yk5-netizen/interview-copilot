@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Interview Copilot",
+  "version": "0.3.0",
+  "description": "Your interview practice and assistance panel.",
+  "permissions": [
+    "sidePanel",
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://interview-copilot-ici6k8o96-mainnet-connect1.vercel.app/*",
+    "https://*.zoom.us/*"
+  ],
+  "action": {
+    "default_title": "Open Interview Copilot",
+    "default_popup": "popup.html"
+  },
+  "side_panel": {
+    "default_path": "panel.html"
+  }
+}
