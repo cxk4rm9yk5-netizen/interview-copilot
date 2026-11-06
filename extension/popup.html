@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview Copilot</title>
+  <style>
+    body {
+      width: 280px;
+      padding: 18px;
+      font-family: Arial, sans-serif;
+      background: #111827;
+      color: white;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    p {
+      color: #cbd5e1;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 7px;
+      background: #2563eb;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Interview Copilot</h2>
+  <p>Your interview assistant is ready.</p>
+  <p>Open the reading panel to view suggested answers from detected captions.</p>
+
+  <button id="openPanel">Open Interview Copilot</button>
+
+  <script>
+    document.getElementById("openPanel").addEventListener("click", async () => {
+      try {
+        await chrome.sidePanel.open({ windowId: chrome.windows.WINDOW_ID_CURRENT });
+        window.close();
+      } catch (error) {
+        document.querySelector("p").textContent =
+          "Could not open the panel. Try opening it from the Edge side panel icon.";
+      }
+    });
+  </script>
+</body>
+</html>
